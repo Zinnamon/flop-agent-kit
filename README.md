@@ -154,12 +154,18 @@ From Flop's own pages (flop.finance/testnet, flop.network/llms.txt, read
 
 ## Status, 26 November 2026
 
-- Template agent: identity check, devnet claim and gateway purchase work on
-  devnet. The devnet wallet-lane gateway key is scoped to
+- Template agent: identity check, devnet claim and gateway key provisioning
+  work on devnet. The devnet wallet-lane gateway key is scoped to
   `qwen/qwen2.5-0.5b-instruct`, a very small model: expect short, simple
-  answers. The direct-session route is implemented but untested, because no
-  devnet miner publishes a reachable endpoint.
-- Digest bot and docs page: working on devnet with the same small model.
+  answers. Wallet keys cannot pin a miner (the gateway returns 403), so the
+  gateway chooses. During the afternoon of 26 November 2026 the gateway could
+  not place requests for that model ("no valid miner-signed standing offer")
+  while the explorer showed the lane's channels timing out; the kit reports
+  this and retries a few times, then stops. The direct-session route is
+  implemented but untested, because no devnet miner publishes a reachable
+  endpoint.
+- Digest bot and docs page: fetch, diff, retrieval and the page itself work;
+  the model step depends on the same gateway lane.
 - Testnet: faucet claims work through the CLI; inference waits for the first
   serving testnet miner.
 
