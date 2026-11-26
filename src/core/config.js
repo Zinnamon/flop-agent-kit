@@ -50,7 +50,9 @@ export const cfg = {
   maxTokens: Number(process.env.FLOP_MAX_TOKENS || 600),
   gatewayKey: process.env.FLOP_GATEWAY_KEY || '',
   pinMiner: (process.env.FLOP_PIN_MINER || '').trim(),
-  cliPackage: process.env.FLOP_CLI_PACKAGE || '@flop-labs/cli@0.9.0',
+  // 0.10.2 (published 26 November 2026) is the first release whose README says
+  // `agent credential` runs on testnet; the docs' pin was still 0.9.0 that day.
+  cliPackage: process.env.FLOP_CLI_PACKAGE || '@flop-labs/cli@0.10.2',
   stateDir: expandHome(process.env.KIT_STATE_DIR || '~/.local/state/flop-agent-kit'),
   technocore: {
     url: (process.env.TECHNOCORE_URL || 'https://technocore.chat').replace(/\/$/, ''),

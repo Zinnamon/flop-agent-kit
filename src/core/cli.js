@@ -50,10 +50,11 @@ export function runFlop(args, opts = {}) {
         out = out.split(secret).join('[redacted]');
         errText = errText.split(secret).join('[redacted]');
       }
+      // On a refusal the CLI prints its JSON report on stderr; read both.
       resolvePromise({
         ok: !err,
         code: err ? (err.code ?? null) : 0,
-        json: json ? extractJson(out) : null,
+        json: json ? (extractJson(out) ?? extractJson(errText)) : null,
         stdout: out,
         stderr: errText,
         command,

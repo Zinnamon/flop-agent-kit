@@ -166,8 +166,17 @@ From Flop's own pages (flop.finance/testnet, flop.network/llms.txt, read
   endpoint.
 - Digest bot and docs page: fetch, diff, retrieval and the page itself work;
   the model step depends on the same gateway lane.
-- Testnet: faucet claims work through the CLI; inference waits for the first
-  serving testnet miner.
+- Testnet, re-read at 17:00 UTC: the gateway now serves two models
+  (`qwen/qwen3-14b`, 28 miners; `qwen/qwen3-8b`, 13 miners) and the faucet is
+  refilled. Flop published CLI 0.10.2 the same afternoon; its README says
+  `agent credential` also runs on testnet "through its public gateway and
+  signed faucet claim". In practice the command creates its **own** testnet
+  wallet in `~/.flop/testnet-enroll-wallet.json` and claims the faucet for it,
+  ignoring `--keystore`, exactly as on devnet. Whether to let a second,
+  CLI-owned wallet claim testnet FLOP is a choice for the person running the
+  kit; the kit does not make it for you. The faucet also enforces a 24-hour
+  cooldown per IP address (`ip_cooldown`), so a second claim from the same
+  connection on the same day is refused.
 
 ## Sources read on 26 November 2026
 
