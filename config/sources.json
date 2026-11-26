@@ -1,0 +1,20 @@
+{
+  "_about": "Official FLOP sources only (flop.finance/official, read 26 November 2026). The digest bot reads every entry with 'digest': true; the ask-the-docs page builds its corpus from entries with 'docs': true. Anything not on this list is untrusted and is not read.",
+  "sources": [
+    { "id": "operator-hub-testnet", "title": "Testnet Operator Hub", "url": "https://docs.flop.network/operators?network=testnet", "kind": "html", "digest": true, "docs": true },
+    { "id": "testnet-faq", "title": "Testnet opening FAQ", "url": "https://docs.flop.network/docs/testnet-and-timeline?network=testnet", "kind": "html", "digest": true, "docs": true },
+    { "id": "testnet-overview", "title": "Testnet overview, genesis and bootnodes", "url": "https://docs.flop.network/networks/testnet", "kind": "html", "digest": true, "docs": true },
+    { "id": "github-releases", "title": "flop-labs/network releases", "url": "https://api.github.com/repos/flop-labs/network/releases?per_page=10", "kind": "github-releases", "digest": true, "docs": true },
+    { "id": "faucet-testnet-limits", "title": "Testnet faucet limits", "url": "https://faucet.flop.network/limits", "kind": "faucet-limits", "digest": true, "docs": false },
+    { "id": "faucet-devnet-limits", "title": "Devnet faucet limits", "url": "https://faucet.devnet.flop.network/limits", "kind": "faucet-limits", "digest": true, "docs": false },
+    { "id": "llms-txt", "title": "FLOP Network agent guide (llms.txt)", "url": "https://flop.network/llms.txt", "kind": "text", "digest": true, "docs": true },
+    { "id": "agent-integration", "title": "Integrating an agent with FLOP", "url": "https://docs.flop.network/docs/agent-integration", "kind": "html", "digest": true, "docs": true },
+    { "id": "send-to-specific-miner", "title": "Send a request to a specific miner", "url": "https://docs.flop.network/docs/send-to-specific-miner", "kind": "html", "digest": true, "docs": true },
+    { "id": "sdk-references", "title": "SDK and package references", "url": "https://docs.flop.network/docs/sdk-references", "kind": "html", "digest": true, "docs": true },
+    { "id": "run-miner-testnet", "title": "Testnet miner onboarding", "url": "https://docs.flop.network/docs/run-miner?network=testnet", "kind": "html", "digest": true, "docs": true },
+    { "id": "validator-prep", "title": "Testnet validator prep kit", "url": "https://docs.flop.network/testnet-validator-prep/", "kind": "html", "digest": true, "docs": true },
+    { "id": "agent-onboarding", "title": "Agent onboarding FAQ", "url": "https://docs.flop.network/docs/agent-onboarding", "kind": "html", "digest": false, "docs": true },
+    { "id": "testnet-rules", "title": "flop.finance testnet page (phase and rules)", "url": "https://flop.finance/testnet/", "kind": "html", "digest": false, "docs": true },
+    { "id": "official-links", "title": "Official links", "url": "https://flop.finance/official/", "kind": "html", "digest": false, "docs": true }
+  ]
+}

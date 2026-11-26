@@ -1,0 +1,27 @@
+{
+  "_about": "Public network identity for the FLOP networks, read from official pages on 26 November 2026: flop.network/llms.txt, docs.flop.network/networks/testnet, faucet /chain endpoints, github.com/flop-labs/network networks/testnet.md. The genesis hash is checked against the live RPC on every run; a mismatch stops the kit.",
+  "devnet": {
+    "label": "FLOP Devnet",
+    "rpcHttp": "https://rpc.devnet.flop.network",
+    "rpcWs": "wss://rpc.devnet.flop.network",
+    "genesisHash": "0x99c172c095340ace980631f9123544c6bebd4839f3437e463533422d8be2d631",
+    "faucet": "https://faucet.devnet.flop.network",
+    "gateway": "https://api.flop.network",
+    "explorer": "https://explorer.devnet.flop.network",
+    "explorerAccount": "https://explorer.devnet.flop.network/account/{address}",
+    "explorerApi": "https://explorer.devnet.flop.network/api",
+    "earns": "nothing. Devnet activity does not count and does not carry over to testnet."
+  },
+  "testnet": {
+    "label": "FLOP Testnet",
+    "rpcHttp": "https://testnet.flop.network",
+    "rpcWs": "wss://testnet.flop.network",
+    "genesisHash": "0x918abd58fb16306b30ef3886514cfaebffecb4de43e82b6f8ec4795c43cfd800",
+    "faucet": "https://faucet.flop.network",
+    "gateway": "https://gateway.testnet.flop.network",
+    "explorer": "https://testnet.flopscan.io",
+    "explorerAccount": "https://testnet.flopscan.io/",
+    "explorerApi": null,
+    "earns": "nothing before the publicly announced activation block, which has not been announced. Earlier activity earns zero, with no backfill (Testnet FAQ, 24 November 2026)."
+  }
+}

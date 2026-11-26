@@ -1,0 +1,26 @@
+# Secrets and local configuration. Never commit these.
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+*keystore*
+*wallet*
+*account.json
+password
+password.*
+
+# Any key folder that ends up inside the checkout by mistake
+keys/
+state/
+.flop/
+session-wallets/
+
+# Node
+node_modules/
+npm-debug.log*
+
+# Editors, macOS, local tool settings
+.DS_Store
+*.swp
+.claude/

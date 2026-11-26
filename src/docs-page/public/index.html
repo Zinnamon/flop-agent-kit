@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ask the FLOP docs (testnet toy)</title>
+<style>
+  :root { color-scheme: light dark; --fg: #1b1b1b; --bg: #fafaf7; --muted: #6b6b6b; --line: #d9d9d4; --accent: #1f5f8b; --card: #ffffff; }
+  @media (prefers-color-scheme: dark) { :root { --fg: #e8e8e4; --bg: #141414; --muted: #a0a0a0; --line: #333; --accent: #7fb3d9; --card: #1d1d1d; } }
+  * { box-sizing: border-box; }
+  body { margin: 0; font: 16px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif; color: var(--fg); background: var(--bg); }
+  main { max-width: 720px; margin: 0 auto; padding: 2rem 1.25rem 4rem; }
+  h1 { font-size: 1.5rem; margin: 0 0 .25rem; }
+  .sub { color: var(--muted); margin: 0 0 1.5rem; }
+  .notice { border: 1px solid var(--line); border-left: 4px solid var(--accent); padding: .75rem 1rem; border-radius: 6px; background: var(--card); margin-bottom: 1.5rem; font-size: .95rem; }
+  form { display: flex; gap: .5rem; }
+  input { flex: 1; font: inherit; padding: .65rem .8rem; border: 1px solid var(--line); border-radius: 6px; background: var(--card); color: var(--fg); }
+  button { font: inherit; padding: .65rem 1rem; border: 0; border-radius: 6px; background: var(--accent); color: #fff; cursor: pointer; }
+  button:disabled { opacity: .6; cursor: wait; }
+  .examples { margin: .75rem 0 0; padding: 0; list-style: none; display: flex; flex-wrap: wrap; gap: .4rem; }
+  .examples button { background: transparent; color: var(--accent); border: 1px solid var(--line); padding: .3rem .6rem; font-size: .9rem; }
+  #answer { margin-top: 1.5rem; white-space: pre-wrap; background: var(--card); border: 1px solid var(--line); border-radius: 6px; padding: 1rem; min-height: 3rem; }
+  .meta { color: var(--muted); font-size: .85rem; margin-top: .75rem; }
+  .meta a { color: var(--accent); }
+  code { font-size: .9em; }
+  footer { color: var(--muted); font-size: .85rem; margin-top: 2.5rem; border-top: 1px solid var(--line); padding-top: 1rem; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Ask the FLOP docs</h1>
+  <p class="sub">A testnet toy. Each answer is bought from a model running on a FLOP miner and grounded in Flop's official documentation.</p>
+  <div class="notice" id="notice">Loading status…</div>
+  <form id="f">
+    <input id="q" maxlength="500" placeholder="For example: when does testnet activity start counting?" autocomplete="off" required>
+    <button id="go" type="submit">Ask</button>
+  </form>
+  <ul class="examples">
+    <li><button type="button" data-q="What is the testnet faucet limit for agents?">Faucet limit?</button></li>
+    <li><button type="button" data-q="How do validators register for testnet?">Validator registration?</button></li>
+    <li><button type="button" data-q="Which CLI and SDK versions reach testnet?">Which CLI version?</button></li>
+    <li><button type="button" data-q="Is there a testnet miner pack yet?">Miner pack?</button></li>
+  </ul>
+  <div id="answer" hidden></div>
+  <div class="meta" id="meta"></div>
+  <footer>
+    Answers can be wrong: the model is small and the retrieval is a keyword match. Nothing here is advice, and nothing here earns anything.
+    Sources are only flop.finance, docs.flop.network, flop.network and github.com/flop-labs. Built with <code>flop-agent-kit</code>.
+  </footer>
+</main>
+<script>
+  const $ = (id) => document.getElementById(id);
+  fetch('/api/status').then(r => r.json()).then(s => {
+    $('notice').textContent = `Network: ${s.label}. Model: ${s.model}. ${s.excerpts} excerpts from ${s.pages.filter(p => !p.error).length} official pages, fetched ${new Date(s.corpusBuiltAt).toUTCString()}. ${s.earns}`;
+  }).catch(() => { $('notice').textContent = 'Status unavailable.'; });
+
+  document.querySelectorAll('.examples button').forEach(b => b.addEventListener('click', () => { $('q').value = b.dataset.q; $('f').requestSubmit(); }));
+
+  $('f').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const question = $('q').value.trim();
+    if (!question) return;
+    $('go').disabled = true;
+    $('answer').hidden = false;
+    $('answer').textContent = 'Buying an answer from a FLOP miner… this can take a minute.';
+    $('meta').innerHTML = '';
+    try {
+      const r = await fetch('/api/ask', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ question }) });
+      const j = await r.json();
+      if (!r.ok) { $('answer').textContent = j.error || `Error ${r.status}`; return; }
+      $('answer').textContent = j.answer || '(empty answer)';
+      const src = (j.sources || []).map(s => `<a href="${s.url}" rel="noopener" target="_blank">${s.title}</a>`).join(' · ');
+      const rc = j.receipt || {};
+      const links = (rc.links || []).map(l => `<a href="${l.url}" rel="noopener" target="_blank">${l.label}</a>`).join(' · ');
+      $('meta').innerHTML = `${src ? 'Grounded in: ' + src + '<br>' : ''}Served by ${rc.model || '?'} on FLOP ${rc.network || '?'}${rc.miner ? ', miner <code>' + rc.miner + '</code>' : ''}${rc.requestId ? ', request <code>' + rc.requestId + '</code>' : ''}.${links ? '<br>' + links : ''}`;
+    } catch (err) {
+      $('answer').textContent = 'Request failed: ' + err.message;
+    } finally {
+      $('go').disabled = false;
+    }
+  });
+</script>
+</body>
+</html>

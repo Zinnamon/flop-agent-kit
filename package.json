@@ -1,0 +1,23 @@
+{
+  "name": "flop-agent-kit",
+  "version": "0.1.0",
+  "description": "A small, honest agent kit for the FLOP Network testnet: a template agent, a daily digest bot and an ask-the-docs page, all buying inference from FLOP miners through Flop's official CLI and gateway.",
+  "type": "module",
+  "private": true,
+  "license": "MIT",
+  "engines": {
+    "node": ">=22"
+  },
+  "bin": {
+    "flop-agent": "./src/agent/cli.js",
+    "flop-digest": "./src/digest/digest.js",
+    "flop-docs-page": "./src/docs-page/server.js"
+  },
+  "scripts": {
+    "agent": "node src/agent/cli.js",
+    "digest": "node src/digest/digest.js",
+    "docs": "node src/docs-page/server.js",
+    "check": "node --check src/core/*.js src/agent/*.js src/digest/*.js src/docs-page/*.js"
+  },
+  "dependencies": {}
+}

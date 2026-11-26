@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+# Refuse to commit anything that looks like a secret. Keys never belong in this repository.
+set -euo pipefail
+
+status=0
+files=$(git diff --cached --name-only --diff-filter=ACM)
+[ -z "$files" ] && exit 0
+
+for f in $files; do
+  case "$f" in
+    .env|.env.*) [ "$f" = ".env.example" ] || { echo "secret-guard: refusing to commit $f"; status=1; };;
+    *.pem|*.key|*keystore*|*wallet*|*account.json|password|password.*) echo "secret-guard: refusing to commit $f (key material by name)"; status=1;;
+  esac
+done
+
+# Content checks on text files only.
+pattern='BEGIN (RSA |EC |OPENSSH )?PRIVATE KEY|"encoded"[[:space:]]*:[[:space:]]*"[A-Za-z0-9+/=]{40,}|"encoding"[[:space:]]*:[[:space:]]*\{[^}]*"scrypt"|FLOP_GATEWAY_KEY=[A-Za-z0-9_-]{8,}|FLOP_KIT_PW=[^[:space:]]|sk-[A-Za-z0-9]{20,}'
+if git diff --cached -U0 -- $files | grep -E '^\+' | grep -Ev '^\+\+\+' | grep -Eiq "$pattern"; then
+  echo "secret-guard: a staged change matches a secret pattern. Remove it before committing."
+  git diff --cached -U0 -- $files | grep -E '^\+' | grep -Ev '^\+\+\+' | grep -Ein "$pattern" | cut -c1-120 | head -5
+  status=1
+fi
+
+# A line that is nothing but 12 or 24 lowercase words is what a pasted seed phrase looks like.
+if git diff --cached -U0 -- $files | grep -E '^\+' | grep -Ev '^\+\+\+' | grep -Eq '^\+[[:space:]]*"?([a-z]{3,8} ){11}[a-z]{3,8}"?[[:space:]]*$|^\+[[:space:]]*"?([a-z]{3,8} ){23}[a-z]{3,8}"?[[:space:]]*$'; then
+  echo "secret-guard: a staged line looks like a 12 or 24 word seed phrase. Check it."
+  status=1
+fi
+
+exit $status
