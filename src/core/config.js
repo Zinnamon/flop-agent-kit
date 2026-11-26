@@ -49,6 +49,7 @@ export const cfg = {
   maxFlop: process.env.FLOP_MAX_FLOP || '0.01',
   maxTokens: Number(process.env.FLOP_MAX_TOKENS || 600),
   gatewayKey: process.env.FLOP_GATEWAY_KEY || '',
+  pinMiner: (process.env.FLOP_PIN_MINER || '').trim(),
   cliPackage: process.env.FLOP_CLI_PACKAGE || '@flop-labs/cli@0.9.0',
   stateDir: expandHome(process.env.KIT_STATE_DIR || '~/.local/state/flop-agent-kit'),
   technocore: {

@@ -50,14 +50,18 @@ export async function chatGateway({ messages, model = cfg.model, maxTokens = cfg
   const body = { model, messages, max_tokens: maxTokens, stream };
   if (temperature !== undefined) body.temperature = temperature;
   explain(`Buying one answer from ${model} through the FLOP gateway at ${cfg.net.gateway} (POST /v1/chat/completions, max ${maxTokens} tokens${stream ? ', streamed' : ''}).`);
+  const headers = {
+    authorization: `Bearer ${key}`,
+    'content-type': 'application/json',
+    accept: stream ? 'text/event-stream' : 'application/json',
+    'user-agent': cfg.userAgent,
+  };
+  // Optional test aid from the agent guide: an owner key may pin one miner with x-flop-miner.
+  // An ineligible pin returns HTTP 409 and never falls through. Never pin a miner you control.
+  if (cfg.pinMiner) headers['x-flop-miner'] = cfg.pinMiner;
   const res = await fetch(`${cfg.net.gateway}/v1/chat/completions`, {
     method: 'POST',
-    headers: {
-      authorization: `Bearer ${key}`,
-      'content-type': 'application/json',
-      accept: stream ? 'text/event-stream' : 'application/json',
-      'user-agent': cfg.userAgent,
-    },
+    headers,
     body: JSON.stringify(body),
     signal: AbortSignal.timeout(600_000),
   });
