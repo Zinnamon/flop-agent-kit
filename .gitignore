@@ -20,6 +20,9 @@ session-wallets/
 node_modules/
 npm-debug.log*
 
+# Personal notes kept next to the kit but never published
+private/
+
 # Editors, macOS, local tool settings
 .DS_Store
 *.swp
