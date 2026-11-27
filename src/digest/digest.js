@@ -119,6 +119,7 @@ async function main() {
   let summaryText = '';
   let receiptLine = '';
   let result = null;
+  let inferenceError = null;
   if (dryRun) {
     console.log('\n--dry-run: no inference bought. Material that would be summarised:\n' + material.slice(0, 3000));
   } else {
@@ -129,15 +130,21 @@ async function main() {
     }
     const system = 'You summarise changes on the FLOP Network\'s official documentation for a daily digest. Use only the material given. Write 3 to 6 short bullet points in plain British English, one fact per bullet, each under 240 characters. Name the page a fact comes from. Do not mention rewards, airdrops, token prices or investment. Do not invent anything that is not in the material. If the material shows no substantive change, say so in one bullet.';
     const prompt = `Date: ${dateWords}. Network pages read: FLOP testnet and devnet official docs.\n\nMaterial (lines added or removed since the previous check):\n${material}\n\nWrite the bullet points now.`;
-    result = await ask({ prompt, system, maxTokens: 500, temperature: 0.2 });
-    summaryText = result.text;
-    const s = summariseReceipt(result);
-    saveReceipt(result, { purpose: 'digest', date: today });
-    receiptLine = `Summarised by ${result.model} on FLOP ${cfg.network}${s.miner ? `, served by miner ${s.miner}` : ''}${s.requestId ? `, request ${s.requestId}` : ''}.`;
+    try {
+      result = await ask({ prompt, system, maxTokens: 500, temperature: 0.2 });
+      summaryText = result.text;
+      const s = summariseReceipt(result);
+      saveReceipt(result, { purpose: 'digest', date: today });
+      receiptLine = `Summarised by ${result.model} on FLOP ${cfg.network}${s.miner ? `, served by miner ${s.miner}` : ''}${s.requestId ? `, request ${s.requestId}` : ''}.`;
+    } catch (err) {
+      // The mechanical part of the digest is still worth having. Say plainly that the model step failed.
+      inferenceError = err.message.split('\n')[0].slice(0, 300);
+      console.log(`\nModel summary not bought: ${inferenceError}`);
+    }
   }
 
   const bullets = summaryText ? extractBullets(summaryText) : changed.slice(0, 5).map((c) => `${c.title} changed: ${c.added[0] || c.removed[0] || ''}`);
-  const thread = buildThread(bullets, facts, receiptLine || 'No inference was bought in this run.');
+  const thread = buildThread(bullets, facts, receiptLine || (inferenceError ? 'The model summary could not be bought this run; the bullets above are mechanical.' : 'No inference was bought in this run.'));
 
   const md = [
     `# FLOP testnet digest, ${dateWords}`,
@@ -147,7 +154,7 @@ async function main() {
     '',
     '## Summary (written by a FLOP-served model)',
     '',
-    summaryText ? summaryText.trim() : '_No inference bought in this run (dry run)._',
+    summaryText ? summaryText.trim() : (inferenceError ? `_No model summary this run: ${inferenceError}_` : '_No inference bought in this run (dry run)._'),
     '',
     receiptLine ? `_${receiptLine}_` : '',
     '',
