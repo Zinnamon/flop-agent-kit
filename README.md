@@ -114,6 +114,21 @@ model to answer from those excerpts only, naming the page. It answers one
 question at a time, five seconds apart, and shows which miner served the
 answer. It binds to localhost; it is a testnet toy, not a service.
 
+## The X agent
+
+```bash
+npm run x -- drafts            # review queue: digest threads, replies, manual posts
+npm run x -- approve <id> && npm run x -- post <id>
+npm run x -- mentions          # answer question mentions from the official docs, via a FLOP miner
+```
+
+Posts the daily digest thread, answers questions people ask your account from
+the official docs (bought from a FLOP miner, source link included, "(bot, from
+the docs)" tail), and keeps everything as a draft for your approval unless you
+switch `X_AUTO_POST_DIGEST=1` or `X_AUTO_REPLY=1` on. Needs your own X
+developer app keys in `.env`. Read [docs/x-agent.md](docs/x-agent.md) first,
+including the part about labelling the account as automated.
+
 ## Switching to testnet
 
 One line in `.env`: `FLOP_NETWORK=testnet`. Read

@@ -63,6 +63,15 @@ export const cfg = {
     host: process.env.DOCS_HOST || '127.0.0.1',
     port: Number(process.env.DOCS_PORT || 8787),
   },
+  x: {
+    apiKey: process.env.X_API_KEY || '',
+    apiSecret: process.env.X_API_SECRET || '',
+    accessToken: process.env.X_ACCESS_TOKEN || '',
+    accessSecret: process.env.X_ACCESS_SECRET || '',
+    autoPostDigest: process.env.X_AUTO_POST_DIGEST === '1',
+    autoReply: process.env.X_AUTO_REPLY === '1',
+    maxRepliesPerRun: Number(process.env.X_MAX_REPLIES_PER_RUN || 5),
+  },
   userAgent: 'flop-agent-kit/0.1',
 };
 

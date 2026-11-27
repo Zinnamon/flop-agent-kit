@@ -178,6 +178,21 @@ async function main() {
   console.log('\n' + thread.join('\n\n'));
 
   if (!dryRun) {
+    // Every thread becomes an X draft for review; it is posted only with X_AUTO_POST_DIGEST=1.
+    try {
+      const { addDraft, updateDraft } = await import('../x/queue.js');
+      const draft = addDraft({ kind: 'digest', posts: thread, source: outPath });
+      console.log(`\nX draft saved: ${draft.id} (review with: npm run x -- show ${draft.id})`);
+      if (cfg.x.autoPostDigest && summaryText) {
+        const { postThread } = await import('../x/client.js');
+        explain(`Posting the ${thread.length}-post digest thread to X (X_AUTO_POST_DIGEST=1).`);
+        const ids = await postThread(thread);
+        updateDraft(draft.id, { status: 'posted', postedIds: ids });
+        console.log(`Posted to X: https://x.com/i/status/${ids[0]}`);
+      }
+    } catch (err) {
+      console.log(`X step skipped: ${err.message.slice(0, 200)}`);
+    }
     if (cfg.technocore.post) {
       const identity = loadOrCreateIdentity();
       explain(`Posting ${thread.length} signed messages to Technocore room "${cfg.technocore.room}" as ${identity.did}. Rooms are public.`);

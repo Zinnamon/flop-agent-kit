@@ -11,13 +11,15 @@
   "bin": {
     "flop-agent": "./src/agent/cli.js",
     "flop-digest": "./src/digest/digest.js",
-    "flop-docs-page": "./src/docs-page/server.js"
+    "flop-docs-page": "./src/docs-page/server.js",
+    "flop-x": "./src/x/cli.js"
   },
   "scripts": {
     "agent": "node src/agent/cli.js",
     "digest": "node src/digest/digest.js",
     "docs": "node src/docs-page/server.js",
-    "check": "node --check src/core/*.js src/agent/*.js src/digest/*.js src/docs-page/*.js"
+    "check": "node --check src/core/*.js src/agent/*.js src/digest/*.js src/docs-page/*.js src/x/*.js",
+    "x": "node src/x/cli.js"
   },
   "dependencies": {}
 }
