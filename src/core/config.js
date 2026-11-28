@@ -52,7 +52,7 @@ export const cfg = {
   pinMiner: (process.env.FLOP_PIN_MINER || '').trim(),
   // 0.10.2 (published 26 November 2026) is the first release whose README says
   // `agent credential` runs on testnet; the docs' pin was still 0.9.0 that day.
-  cliPackage: process.env.FLOP_CLI_PACKAGE || '@flop-labs/cli@0.10.2',
+  cliPackage: process.env.FLOP_CLI_PACKAGE || '@flop-labs/cli@0.10.3',
   stateDir: expandHome(process.env.KIT_STATE_DIR || '~/.local/state/flop-agent-kit'),
   technocore: {
     url: (process.env.TECHNOCORE_URL || 'https://technocore.chat').replace(/\/$/, ''),
